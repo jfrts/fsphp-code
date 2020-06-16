@@ -10,12 +10,43 @@ require __DIR__ . "/source/autoload.php";
  */
 fullStackPHPClassSession("classe pai", __LINE__);
 
+$event = new \Source\Inheritance\Event\Event(
+    "Workshop FSPHP",
+    new DateTime("2020-06-16 14:30"),
+    2500,
+    4
+);
+
+var_dump($event);
+
+$event->register("Robson Leite", "cursos@upinside.com.br");
+$event->register("Kaue", "cursos@upinside.com.br");
+$event->register("Gustavo", "cursos@upinside.com.br");
+$event->register("Gah", "cursos@upinside.com.br");
+$event->register("João", "cursos@upinside.com.br");
 
 /*
  * [ classe filha ] Uma classe que herda a classe pai e especializa seuas rotinas
  */
 fullStackPHPClassSession("classe filha", __LINE__);
 
+$address = new \Source\Inheritance\Address("Rua do evento", 1982, "Bloco 1");
+
+$event = new \Source\Inheritance\Event\EventLive(
+    "Workshop FSPHP",
+    new DateTime("2020-06-16 14:30"),
+    2500,
+    4,
+    $address
+);
+
+var_dump($event);
+
+$event->register("Robson Leite", "cursos@upinside.com.br");
+$event->register("Kaue", "cursos@upinside.com.br");
+$event->register("Gustavo", "cursos@upinside.com.br");
+$event->register("Gah", "cursos@upinside.com.br");
+$event->register("João", "cursos@upinside.com.br");
 
 /*
  * [ polimorfismo ] Uma classe filha que tem métodos iguais (mesmo nome e argumentos) a class
@@ -23,3 +54,17 @@ fullStackPHPClassSession("classe filha", __LINE__);
  */
 fullStackPHPClassSession("polimorfismo", __LINE__);
 
+$event = new \Source\Inheritance\Event\EventOnline(
+    "Workshop FSPHP",
+    new DateTime("2020-06-16 14:30"),
+    297,
+    "https://google.com.br",
+);
+
+var_dump($event);
+
+$event->register("Robson Leite", "cursos@upinside.com.br");
+$event->register("Kaue", "cursos@upinside.com.br");
+$event->register("Gustavo", "cursos@upinside.com.br");
+$event->register("Gah", "cursos@upinside.com.br");
+$event->register("João", "cursos@upinside.com.br");

@@ -27,6 +27,10 @@ class Event
         $this->vacancies = $vacancies;
     }
 
+    /**
+     * @param $fullName
+     * @param $email
+     */
     public function register($fullName, $email)
     {
         if ($this->vacancies >= 1) {

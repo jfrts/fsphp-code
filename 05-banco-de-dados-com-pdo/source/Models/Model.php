@@ -81,9 +81,26 @@ abstract class Model
         return $this->message;
     }
 
-    protected function create()
+    /**
+     * @param string $entity
+     * @param array $data
+     * @return int|null
+     */
+    protected function create(string $entity, array $data): ?int
     {
+        try {
+            $colums = implode(", ", array_keys($data));
+            $values = ":" . implode(", :", array_keys($data));
+            $query = "INSERT INTO {$entity} ({$colums}) VALUES ({$values})";
 
+            $stmt = Connect::getInstance()->prepare($query);
+            $stmt->execute($data);
+
+            return Connect::getInstance()->lastInsertId();
+        } catch (PDOException $exception) {
+            $this->fail = $exception;
+            return null;
+        }
     }
 
     /**
@@ -128,11 +145,32 @@ abstract class Model
     {
     }
 
+    /**
+     * @return array|null
+     */
     protected function safe(): ?array
     {
+        $safe = (array)$this->data;
+
+        foreach (static::$safe as $unset) {
+            unset($safe[$unset]);
+        }
+
+        return $safe;
     }
 
-    private function filter()
+    /**
+     * @param array $data
+     * @return array|null
+     */
+    private function filter(array $data): ?array
     {
+        $filter = [];
+
+        foreach ($data as $key => $value) {
+            $filter[$key] = (is_null($value) ? null : filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS));
+        }
+
+        return $filter;
     }
 }

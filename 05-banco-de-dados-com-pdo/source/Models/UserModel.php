@@ -2,15 +2,31 @@
 
 namespace Source\Models;
 
+/**
+ * Class UserModel
+ * @package Source\Models
+ */
 class UserModel extends Model
 {
     protected static array $safe = ["id", "created_at", "updated_at"];
 
     protected static string $entity = "users";
 
-    public function bootstrap()
+    /**
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $email
+     * @param string|null $document
+     * @return $this|null
+     */
+    public function bootstrap(string $firstName, string $lastName, string $email, string $document = null): ?UserModel
     {
+        $this->first_name = $firstName;
+        $this->last_name = $lastName;
+        $this->email = $email;
+        $this->document = $document;
 
+        return $this;
     }
 
     public function load(int $id, string $columns = "*"): ?UserModel
@@ -69,9 +85,38 @@ class UserModel extends Model
         return $all->fetchAll(\PDO::FETCH_CLASS, __CLASS__);
     }
 
-    public function save()
+    /**
+     * @return $this|null
+     */
+    public function save(): ?UserModel
     {
+        if (!$this->required()) {
+            return null;
+        }
 
+        /** User Update */
+        if (!empty($this->id)) {
+            $userId = $this->id;
+        }
+
+        /** User Create */
+        if (empty($this->id)) {
+            if ($this->find($this->email)) {
+                $this->message = "O e-mail informado já está cadastrado";
+                return null;
+            }
+
+            $userId = $this->create(self::$entity, $this->safe());
+
+            if ($this->fail()) {
+                $this->message = "Erro ao cadastrar, verifique os dados";
+            } else {
+                $this->message = "Cadastro realizado com sucesso";
+            }
+        }
+
+        $this->data = $this->read("SELECT * from users WHERE id = :id", "id={$userId}")->fetch();
+        return $this;
     }
 
     public function destroy()
@@ -79,8 +124,21 @@ class UserModel extends Model
 
     }
 
-    private function required()
+    /**
+     * @return bool
+     */
+    private function required(): bool
     {
+        if (empty($this->first_name) || empty($this->last_name) || empty($this->email)) {
+            $this->message = "Nome, sobrenome e email são obrigatórios";
+            return false;
+        }
 
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $this->message = "O email informado não parece válido";
+            return false;
+        }
+
+        return true;
     }
 }

@@ -2,11 +2,13 @@
 
 namespace Source\Models;
 
+use Source\Core\Model;
+
 /**
  * Class User
  * @package Source\Models
  */
-class UserModel extends Model
+class User extends Model
 {
     protected static array $safe = ["id", "created_at", "updated_at"];
 

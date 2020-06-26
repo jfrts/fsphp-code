@@ -9,7 +9,7 @@ require __DIR__ . "/../source/autoload.php";
  */
 fullStackPHPClassSession("load", __LINE__);
 
-$model = new \Source\Models\UserModel();
+$model = new \Source\Models\User();
 
 $user = $model->load(1);
 
@@ -22,7 +22,7 @@ var_dump(
  */
 fullStackPHPClassSession("find", __LINE__);
 
-$model = new \Source\Models\UserModel();
+$model = new \Source\Models\User();
 
 $user = $model->find("felipe33@email.com.br");
 

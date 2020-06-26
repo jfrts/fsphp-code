@@ -29,6 +29,11 @@ class UserModel extends Model
         return $this;
     }
 
+    /**
+     * @param int $id
+     * @param string $columns
+     * @return UserModel|null
+     */
     public function load(int $id, string $columns = "*"): ?UserModel
     {
         $load = $this->read(
@@ -142,9 +147,23 @@ class UserModel extends Model
         return $this;
     }
 
-    public function destroy()
+    /**
+     * @return $this|null
+     */
+    public function destroy(): ?UserModel
     {
+        if (!empty($this->id)) {
+            $this->delete(self::$entity, "id = :id", "id={$this->id}");
+        }
 
+        if ($this->fail()) {
+            $this->message = "Não foi possível remover o usuário";
+            return null;
+        }
+
+        $this->message = "Usuário removido com sucesso";
+        $this->data = null;
+        return $this;
     }
 
     /**

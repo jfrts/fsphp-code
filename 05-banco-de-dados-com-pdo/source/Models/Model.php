@@ -137,6 +137,13 @@ abstract class Model
         }
     }
 
+    /**
+     * @param string $entity
+     * @param array $data
+     * @param string $terms
+     * @param string $params
+     * @return int|null
+     */
     protected function update(string $entity, array $data, string $terms, string $params): ?int
     {
         try {
@@ -162,8 +169,28 @@ abstract class Model
         }
     }
 
-    protected function delete()
+    /**
+     * @param string $entity
+     * @param string $terms
+     * @param string $params
+     * @return int|null
+     */
+    protected function delete(string $entity, string $terms, string $params): ?int
     {
+        try {
+
+            $stmt = Connect::getInstance();
+            $stmt = $stmt->prepare("DELETE FROM {$entity} WHERE {$terms}");
+
+            parse_str($params, $params);
+
+            $stmt->execute($params);
+            return ($stmt->rowCount() ?? 1);
+
+        } catch (PDOException $exception) {
+            $this->fail = $exception;
+            return null;
+        }
     }
 
     /**
